@@ -4,7 +4,7 @@ pipeline {
         nodejs 'nodejs-20'
     }
     environment {
-        MONGO_URL = 'mongodb+srv://supercluster.d83jj.mongodb.net/superData'
+        MONGO_URI = 'mongodb+srv://supercluster.d83jj.mongodb.net/superData'
     }
     stages{
         stage ('Install Dependencies'){
