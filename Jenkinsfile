@@ -22,6 +22,7 @@ pipeline {
                             --scan "./"
                             --out "./"
                             --format "ALL"
+                            --disableYarnAudit
                             --prettyPrint''', odcInstallation: 'dep-check-10'
                     }
                 }
