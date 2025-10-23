@@ -29,8 +29,8 @@ pipeline {
             }
         }
         stage ('Run Tests'){
-            withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-aws-iam-s3', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                steps {
+            steps {
+                withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-aws-iam-s3', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                     sh 'npm test'
                 }
             }
