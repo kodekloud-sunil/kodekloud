@@ -3,6 +3,9 @@ pipeline {
     tools {
         nodejs 'nodejs-20'
     }
+    environment {
+        MONGO_URL = 'mongodb+srv://supercluster.d83jj.mongodb.net/superData'
+    }
     stages{
         stage ('Install Dependencies'){
             steps {
@@ -30,7 +33,7 @@ pipeline {
         }
         stage ('Run Tests'){
             steps {
-                withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-aws-iam-s3', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                withCredentials([usernamePassword(credentialsId: 'mongodb-cred', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
                     sh 'npm test'
                 }
             }
