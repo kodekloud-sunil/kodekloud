@@ -4,10 +4,14 @@ pipeline {
         nodejs 'nodejs-20'
     }
     stages{
-        stage ('node version'){
+        stage ('Install Dependencies'){
             steps {
-                sh 'node -v'
-                sh 'npm -v'
+                sh 'npm install --no-audit'
+            }
+        }
+        stage('Dependencies Audit'){
+            steps{
+                sh 'npm audit --audit-level=critical'
             }
         }
     }
