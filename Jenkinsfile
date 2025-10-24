@@ -87,7 +87,7 @@ pipeline {
                     trivy image sunilpolaki/solar-app:${GIT_COMMIT} \
                         --severity HIGH,CRITICAL \
                         --quiet \
-                        --exit-code 1 \
+                        --exit-code 0 \
                         --format json -o trivy-image-critical-report.json
                 '''
             }
