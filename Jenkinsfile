@@ -8,6 +8,7 @@ pipeline {
         MOCHA_CHECKS_API = 'false'
         MONGO_USERNAME = credentials('mongo-username')
         MONGO_PASSWORD = credentials('mongo-password')
+        SONAR_HOME = tool('sonar-scanner')
     }
     stages{
         stage ('Install Dependencies'){
@@ -52,6 +53,18 @@ pipeline {
                     sh 'npm run coverage'
                 }
                 publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code coverage Report', reportTitles: '', useWrapperFileDirectly: true])
+            }
+        }
+        stage ('SAST - Sonarqube'){
+            steps {
+                sh '$SONAR_HOME'
+                sh '''
+                    $SONAR_HOME/bin/sonar-scanner \
+                        -Dsonar.projectKey=kodekloud \
+                        -Dsonar.sources=app.js \
+                        -Dsonar.host.url=http://65.0.69.86:9000 \
+                        -Dsonar.token=sqp_d26ff0235275a9f6cea2f87a3751e0dcd150786a 
+                '''
             }
         }
     }
