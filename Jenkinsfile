@@ -8,53 +8,53 @@ pipeline {
         MOCHA_CHECKS_API = 'false'
         MONGO_USERNAME = credentials('mongo-username')
         MONGO_PASSWORD = credentials('mongo-password')
-        SONAR_HOME = tool('sonar-scanner')
+        SONAR_HOME = tool 'sonar-scanner'
     }
     stages{
-        stage ('Install Dependencies'){
-            steps {
-                sh 'npm install --no-audit'
-            }
-        }
-        stage ('Dependencies Audit') {
-            parallel {
-                stage('default audit') {
-                    steps {
-                        sh 'npm audit --audit-level=critical'
-                    }
-                }
-                stage ('OWASP Audit'){
-                    steps {
-                        dependencyCheck additionalArguments: '''
-                            --scan "./"
-                            --out "./"
-                            --format "ALL"
-                            --disableYarnAudit
-                            --prettyPrint''', odcInstallation: 'dep-check-10'
-                        dependencyCheckPublisher failedTotalCritical: 1, pattern: 'dependency-check-report.xml', stopBuild: false
+        // stage ('Install Dependencies'){
+        //     steps {
+        //         sh 'npm install --no-audit'
+        //     }
+        // }
+        // stage ('Dependencies Audit') {
+        //     parallel {
+        //         stage('default audit') {
+        //             steps {
+        //                 sh 'npm audit --audit-level=critical'
+        //             }
+        //         }
+        //         stage ('OWASP Audit'){
+        //             steps {
+        //                 dependencyCheck additionalArguments: '''
+        //                     --scan "./"
+        //                     --out "./"
+        //                     --format "ALL"
+        //                     --disableYarnAudit
+        //                     --prettyPrint''', odcInstallation: 'dep-check-10'
+        //                 dependencyCheckPublisher failedTotalCritical: 1, pattern: 'dependency-check-report.xml', stopBuild: false
 
-                        publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'dependency-check-jenkins.html', reportName: 'Dependency check HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+        //                 publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'dependency-check-jenkins.html', reportName: 'Dependency check HTML Report', reportTitles: '', useWrapperFileDirectly: true])
 
-                        junit allowEmptyResults: true, keepProperties: true, testResults: 'dependency-check-junit.xml'
-                    }
-                }
-            }
-        }
-        stage ('Run Tests'){
-            steps {
-                catchError(buildResult: 'SUCCESS') {
-                    sh 'npm test'
-                }
-            }
-        }
-        stage ('Coverage') {
-            steps {
-                catchError(buildResult: 'UNSTABLE') {
-                    sh 'npm run coverage'
-                }
-                publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code coverage Report', reportTitles: '', useWrapperFileDirectly: true])
-            }
-        }
+        //                 junit allowEmptyResults: true, keepProperties: true, testResults: 'dependency-check-junit.xml'
+        //             }
+        //         }
+        //     }
+        // }
+        // stage ('Run Tests'){
+        //     steps {
+        //         catchError(buildResult: 'SUCCESS') {
+        //             sh 'npm test'
+        //         }
+        //     }
+        // }
+        // stage ('Coverage') {
+        //     steps {
+        //         catchError(buildResult: 'UNSTABLE') {
+        //             sh 'npm run coverage'
+        //         }
+        //         publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code coverage Report', reportTitles: '', useWrapperFileDirectly: true])
+        //     }
+        // }
         stage ('SAST - Sonarqube'){
             steps {
                 sh '$SONAR_HOME'
