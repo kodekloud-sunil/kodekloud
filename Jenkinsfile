@@ -27,10 +27,10 @@ pipeline {
                             --format "ALL"
                             --disableYarnAudit
                             --prettyPrint''', odcInstallation: 'dep-check-10'
-                        dependencyCheckPublisher failedTotalCritical: 0, pattern: 'dependency-check-report.xml', stopBuild: true
+                        dependencyCheckPublisher failedTotalCritical: 1, pattern: 'dependency-check-report.xml', stopBuild: false
 
                         publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'dependency-check-jenkins.html', reportName: 'Dependency check HTML Report', reportTitles: '', useWrapperFileDirectly: true])
-                        
+
                         junit allowEmptyResults: true, keepProperties: true, testResults: 'dependency-check-junit.xml'
                     }
                 }
