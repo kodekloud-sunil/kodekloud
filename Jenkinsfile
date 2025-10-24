@@ -70,5 +70,10 @@ pipeline {
                 waitForQualityGate abortPipeline: true
             }
         }
+        stage ('Docker Build'){
+            steps {
+                sh 'docker build -t sunilpolaki/solar-app:$GIT_COMMIT .'
+            }
+        }
     }
 }
