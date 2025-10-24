@@ -57,7 +57,6 @@ pipeline {
         // }
         stage ('SAST - Sonarqube'){
             steps {
-                sh '$SONAR_HOME'
                 sh '''
                     $SONAR_HOME/bin/sonar-scanner \
                         -Dsonar.projectKey=kodekloud \
