@@ -57,14 +57,17 @@ pipeline {
         // }
         stage ('SAST - Sonarqube'){
             steps {
-                sh '''
-                    $SONAR_HOME/bin/sonar-scanner \
-                        -Dsonar.projectKey=kodekloud \
-                        -Dsonar.sources=app.js \
-                        -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
-                        -Dsonar.host.url=http://65.0.69.86:9000 \
-                        -Dsonar.token=sqp_d26ff0235275a9f6cea2f87a3751e0dcd150786a 
-                '''
+                timeout(time: 60, unit: 'SECONDS') {
+                    withSonarQubeEnv('sunil-sonar-server') {
+                        sh '''
+                            $SONAR_HOME/bin/sonar-scanner \
+                                -Dsonar.projectKey=kodekloud \
+                                -Dsonar.sources=app.js \
+                                -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
+                        '''
+                    waitForQualityGate abortPipeline: true
+                    }
+                }
             }
         }
     }
