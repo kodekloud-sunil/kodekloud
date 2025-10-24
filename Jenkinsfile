@@ -38,5 +38,10 @@ pipeline {
                 }
             }
         }
+        stage ('Coverage') {
+            steps {
+                sh 'npm run coverage'
+            }
+        }
     }
 }
