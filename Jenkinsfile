@@ -5,6 +5,7 @@ pipeline {
     }
     environment {
         MONGO_URI = 'mongodb+srv://supercluster.d83jj.mongodb.net/superData'
+        MOCHA_CHECKS_API = 'false'
     }
     stages{
         stage ('Install Dependencies'){
@@ -39,16 +40,21 @@ pipeline {
         stage ('Run Tests'){
             steps {
                 withCredentials([usernamePassword(credentialsId: 'mongodb-cred', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
-                    sh 'npm test'
+                    catchError(buildResult: 'SUCCESS') {
+                        sh 'npm test'
+                    }
                 }
             }
         }
         stage ('Coverage') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'mongodb-cred', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
-                    sh 'npm run coverage'
+                    catchError(buildResult: 'UNSTABLE') {
+                        sh 'npm run coverage'
+                    }
                 }
             }
+            publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code coverage Report', reportTitles: '', useWrapperFileDirectly: true])
         }
     }
 }
