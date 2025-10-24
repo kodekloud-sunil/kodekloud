@@ -58,14 +58,14 @@ pipeline {
         stage ('SAST - Sonarqube'){
             steps {
                 timeout(time: 60, unit: 'SECONDS') {
-                    withSonarQubeEnv('sunil-sonar-server') {
+                    withSonarQubeEnv ('sunil-sonar-server') {
                         sh '''
                             $SONAR_HOME/bin/sonar-scanner \
                                 -Dsonar.projectKey=kodekloud \
                                 -Dsonar.sources=app.js \
                                 -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
                         '''
-                    waitForQualityGate abortPipeline: true
+                waitForQualityGate abortPipeline: true
                     }
                 }
             }
