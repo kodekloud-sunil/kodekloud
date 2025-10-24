@@ -96,10 +96,10 @@ pipeline {
                     sh '''
                         trivy convert \
                             --format template --template "@/usr/local/share/trivy/templates/html.tpl" \
-                            --output trivy-image-medium-report.html trivy-image-medium-report.json
+                            --output trivy-image-medium-report.xml trivy-image-medium-report.json
                         trivy convert \
                             --format template --template "@/usr/local/share/trivy/templates/html.tpl" \
-                            --output trivy-image-critical-report.html trivy-image-critical-report.json
+                            --output trivy-image-critical-report.xml trivy-image-critical-report.json
                         trivy convert \
                             --format template --template "@/usr/local/share/trivy/templates/html.tpl" \
                             --output trivy-image-medium-report.html trivy-image-medium-report.json
