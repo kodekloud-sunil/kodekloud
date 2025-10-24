@@ -55,24 +55,41 @@ pipeline {
         //         publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code coverage Report', reportTitles: '', useWrapperFileDirectly: true])
         //     }
         // }
-        stage ('SAST - Sonarqube'){
-            steps {
-                timeout(time: 60, unit: 'SECONDS') {
-                    withSonarQubeEnv ('sunil-sonar-server') {
-                        sh '''
-                            $SONAR_HOME/bin/sonar-scanner \
-                                -Dsonar.projectKey=kodekloud \
-                                -Dsonar.sources=app.js \
-                                -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
-                        '''
-                    }
-                }
-                waitForQualityGate abortPipeline: true
-            }
-        }
+        // stage ('SAST - Sonarqube'){
+        //     steps {
+        //         timeout(time: 60, unit: 'SECONDS') {
+        //             withSonarQubeEnv ('sunil-sonar-server') {
+        //                 sh '''
+        //                     $SONAR_HOME/bin/sonar-scanner \
+        //                         -Dsonar.projectKey=kodekloud \
+        //                         -Dsonar.sources=app.js \
+        //                         -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
+        //                 '''
+        //             }
+        //         }
+        //         waitForQualityGate abortPipeline: true
+        //     }
+        // }
         stage ('Docker Build'){
             steps {
                 sh 'docker build -t sunilpolaki/solar-app:$GIT_COMMIT .'
+            }
+        }
+        stage ('TRIVY Scan') {
+            steps {
+                sh '''
+                    trivy image sunilpolaki/solar-app:$GIT_COMMIT \
+                        --severity LOW,MEDIUM \       
+                        --quiet \                        
+                        --exit-code 0 \                   
+                        --format json -o trivy-image-medium-report.json
+                    
+                    trivy image sunilpolaki/solar-app:$GIT_COMMIT \
+                        --severity HIGH,CRITICAL \       
+                        --quiet \                        
+                        --exit-code 1 \                   
+                        --format json -o trivy-image-critical-report.json
+                '''
             }
         }
     }
