@@ -75,19 +75,19 @@ pipeline {
                 sh 'docker build -t sunilpolaki/solar-app:$GIT_COMMIT .'
             }
         }
-        stage ('TRIVY Scan') {
+        stage('TRIVY Scan') {
             steps {
                 sh '''
-                    trivy image sunilpolaki/solar-app:$GIT_COMMIT \
-                        --severity LOW,MEDIUM \       
-                        --quiet \                        
-                        --exit-code 0 \                   
+                    trivy image sunilpolaki/solar-app:${GIT_COMMIT} \
+                        --severity LOW,MEDIUM \
+                        --quiet \
+                        --exit-code 0 \
                         --format json -o trivy-image-medium-report.json
-                    
-                    trivy image sunilpolaki/solar-app:$GIT_COMMIT \
-                        --severity HIGH,CRITICAL \       
-                        --quiet \                        
-                        --exit-code 1 \                   
+
+                    trivy image sunilpolaki/solar-app:${GIT_COMMIT} \
+                        --severity HIGH,CRITICAL \
+                        --quiet \
+                        --exit-code 1 \
                         --format json -o trivy-image-critical-report.json
                 '''
             }
