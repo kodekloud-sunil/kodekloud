@@ -63,7 +63,7 @@ pipeline {
                             $SONAR_HOME/bin/sonar-scanner \
                                 -Dsonar.projectKey=kodekloud \
                                 -Dsonar.sources=app.js \
-                                -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
+                                -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
                         '''
                 waitForQualityGate abortPipeline: true
                     }
