@@ -29,7 +29,7 @@ pipeline {
                             --prettyPrint''', odcInstallation: 'dep-check-10'
                         dependencyCheckPublisher failedTotalCritical: 1, pattern: 'dependency-check-report.xml'
 
-                        publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'dependency-check-jenkins.html', reportFiles: 'index.html', reportName: 'dependency check HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                        publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: './', reportFiles: 'index.html', reportName: 'dependency check HTML Report', reportTitles: '', useWrapperFileDirectly: true])
 
                         junit allowEmptyResults: true, keepProperties: true, testResults: 'dependency-check-junit.xml'
                     }
@@ -45,7 +45,9 @@ pipeline {
         }
         stage ('Coverage') {
             steps {
-                sh 'npm run coverage'
+                withCredentials([usernamePassword(credentialsId: 'mongodb-cred', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
+                    sh 'npm run coverage'
+                }
             }
         }
     }
