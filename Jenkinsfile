@@ -110,5 +110,10 @@ pipeline {
                 }
             }
         }
+        stage('Docker Push'){
+            steps {
+                sh 'docker push sunilpolaki/solar-app:$GIT_COMMIT'
+            }
+        }
     }
 }
