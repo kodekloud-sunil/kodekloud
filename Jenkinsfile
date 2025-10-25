@@ -5,7 +5,6 @@ pipeline {
     }
     environment {
         MONGO_URI = 'mongodb+srv://supercluster.d83jj.mongodb.net/superData'
-        MOCHA_CHECKS_API = 'false'
         MONGO_USERNAME = credentials('mongo-username')
         MONGO_PASSWORD = credentials('mongo-password')
         SONAR_HOME = tool 'sonar-scanner'
@@ -119,22 +118,24 @@ pipeline {
         }
         stage('Deploy - AWS EC2') {
             steps {
-                sshagent(['ssh']) {
-                    sh '''
-                        ssh -o StrictHostKeyChecking=no ubuntu@65.0.69.86 "
-                        if sudo docker ps -a | grep -q 'solar-app'; then
-                            echo "Container found. Stopping..."
-                            sudo docker stop "solar-app" && sudo docker rm "solar-app"
-                            echo "Container stopped and removed."
-                        fi
+                script{
+                    sshagent(['ssh']) {
+                        sh '''
+                            ssh -o StrictHostKeyChecking=no ubuntu@65.0.69.86 "
+                            if sudo docker ps -a | grep -q 'solar-app'; then
+                                echo "Container found. Stopping..."
+                                sudo docker stop "solar-app" && sudo docker rm "solar-app"
+                                echo "Container stopped and removed."
+                            fi
 
-                        sudo docker run --name solar-app \\
-                            -e MONGO_URI=$MONGO_URI \\
-                            -e MONGO_USERNAME=$MONGO_USERNAME \\
-                            -e MONGO_PASSWORD=$MONGO_PASSWORD \\
-                            -p 3000:3000 -d sunilpolaki/solar-app:$GIT_COMMIT
-                        "
-                    '''
+                            sudo docker run --name solar-app \\
+                                -e MONGO_URI=$MONGO_URI \\
+                                -e MONGO_USERNAME=$MONGO_USERNAME \\
+                                -e MONGO_PASSWORD=$MONGO_PASSWORD \\
+                                -p 3000:3000 -d sunilpolaki/solar-app:$GIT_COMMIT
+                            "
+                        '''
+                    }
                 }
             }
         }
