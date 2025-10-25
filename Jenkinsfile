@@ -113,7 +113,7 @@ pipeline {
         stage('Docker Push'){
             steps {
                 withDockerRegistry(credentialsId: 'docker-cred', url: "") {
-                    sh 'docker push sunilpolaki/solar-app'
+                    sh 'docker push sunilpolaki/solar-app:$GIT_COMMIT'
                 }
             }
         }
