@@ -117,5 +117,11 @@ pipeline {
                 }
             }
         }
+        post {
+            always {
+                publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'trivy-image-critical-report.html', reportName: 'Trivy Image Critical Report', reportTitles: '', useWrapperFileDirectly: true])
+
+                publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'trivy-image-medium-report.html', reportName: 'Trivy Image Mediuum Report', reportTitles: '', useWrapperFileDirectly: true])
+            }
     }
 }
