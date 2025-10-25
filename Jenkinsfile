@@ -78,13 +78,13 @@ pipeline {
         stage('TRIVY Scan') {
             steps {
                 sh '''
-                    trivy image sunilpolaki/solar-app:${GIT_COMMIT} \
+                    trivy image sunilpolaki/solar-app:$GIT_COMMIT \
                         --severity LOW,MEDIUM \
                         --quiet \
                         --exit-code 0 \
                         --format json -o trivy-image-medium-report.json
 
-                    trivy image sunilpolaki/solar-app:${GIT_COMMIT} \
+                    trivy image sunilpolaki/solar-app:$GIT_COMMIT \
                         --severity HIGH,CRITICAL \
                         --quiet \
                         --exit-code 0 \
