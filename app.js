@@ -83,4 +83,5 @@ app.get('/live', (req, res) => {
 });
 
 app.get('/ready', (req, res) => {
-  res.json({ "status": "ready" }
+  res.json({ "status": "ready" });
+});
