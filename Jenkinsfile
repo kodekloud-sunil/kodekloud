@@ -9,7 +9,7 @@ pipeline {
         MONGO_USERNAME = credentials('mongo-username')
         MONGO_PASSWORD = credentials('mongo-password')
         SONAR_HOME = tool 'sonar-scanner'
-        CONTAINER_NAME = 'sunilpolaki/solar-ap.*'
+        CONTAINER_NAME = 'solar-app'
     }
     stages{
         // stage ('Install Dependencies'){
@@ -114,7 +114,7 @@ pipeline {
         stage('Docker Push'){
             steps {
                 withDockerRegistry(credentialsId: 'docker-cred', url: "") {
-                    sh 'docker push sunilpolaki/solar-app:$GIT_COMMIT'
+                    sh 'docker push sunilpolaki/solar-app'
                 }
             }
         }
