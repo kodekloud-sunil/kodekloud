@@ -123,5 +123,6 @@ pipeline {
 
                 publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'trivy-image-medium-report.html', reportName: 'Trivy Image Mediuum Report', reportTitles: '', useWrapperFileDirectly: true])
             }
+        }
     }
 }
