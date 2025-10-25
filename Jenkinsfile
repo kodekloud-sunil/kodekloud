@@ -9,7 +9,6 @@ pipeline {
         MONGO_USERNAME = credentials('mongo-username')
         MONGO_PASSWORD = credentials('mongo-password')
         SONAR_HOME = tool 'sonar-scanner'
-        CONTAINER_NAME = 'solar-app'
     }
     stages{
         // stage ('Install Dependencies'){
@@ -118,47 +117,10 @@ pipeline {
                 }
             }
         }
-        stage('Deploy to EC2') {
-    steps {
-        script {
-            sshagent(['ssh']) {
-                // Use single quotes for Jenkins-safe environment variable passing
-                sh '''
-                    echo "$CONTAINER_NAME"
-                    echo "---- Connecting to EC2 and deploying application ----"
+        
+                
 
-                    ssh -tt -o StrictHostKeyChecking=no ubuntu@65.0.69.86 "
-                        echo Checking for running container...
 
-                        if [ \$(docker ps -q -f name=$CONTAINER_NAME) ]; then
-                            echo Container $CONTAINER_NAME is running. Stopping and removing...
-                            docker stop $CONTAINER_NAME
-                            docker rm $CONTAINER_NAME
-                        elif [ \$(docker ps -a -q -f name=$CONTAINER_NAME) ]; then
-                            echo Container exists but not running. Removing...
-                            docker rm $CONTAINER_NAME
-                        else
-                            echo No existing container found.
-                        fi
-
-                        echo Pulling latest image...
-                        docker pull sunilpolaki/solar-app:$GIT_COMMIT
-
-                        echo Starting new container...
-                        docker run -d --name $CONTAINER_NAME \\
-                            -e MONGO_URI=$MONGO_URI \\
-                            -e MONGO_USERNAME=$MONGO_USERNAME \\
-                            -e MONGO_PASSWORD=$MONGO_PASSWORD \\
-                            -p 3000:3000 sunilpolaki/solar-app:$GIT_COMMIT
-
-                        echo Deployment completed successfully!
-                        docker ps | grep $CONTAINER_NAME
-                    "
-                '''
-            }
-        }
-    }
-}
 
     }
     post {
