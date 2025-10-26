@@ -142,7 +142,7 @@ pipeline {
         }
         stage("integration testing"){
             steps{
-                withAWS(credentials: 'aws-aws-iam-s3', region: 'ap-south-1') {
+                withAWS(credentials: 'aws2', region: 'ap-south-1') {
                     sh '''
                         bash integration-test-with-ec2.sh
                     '''

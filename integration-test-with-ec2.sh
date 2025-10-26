@@ -7,7 +7,7 @@ aws --version
 
 Data=$(aws ec2 describe-instances)
 echo "Data - $Data"
-URL=$(aws ec2 describe-instances | jq -r '.Reservations[].Instances[] | select(.Tags[].Value == "dev-deploy") | .NetworkInterfaces[].Association.PublicIp')
+URL=$(aws ec2 describe-instances | jq -r '.Reservations[].Instances[] | select(.Tags[].Value == "CI/CD") | .NetworkInterfaces[].Association.PublicIp')
 echo "URL Data - $URL"
 
 
