@@ -115,10 +115,9 @@ pipeline {
             }
         }
         stage('aws'){
-            
             steps{
                 when{
-                    branch 'feature*'
+                    branch 'feature.*'
                 }
                 script{
                     sshagent(['ssh']) {
@@ -146,7 +145,7 @@ pipeline {
         stage("integration testing"){
             steps{
                 when{
-                    branch 'feature*'
+                    branch 'feature.*'
                 }
                 withAWS(credentials: 'aws2', region: 'ap-south-1') {
                     sh '''
