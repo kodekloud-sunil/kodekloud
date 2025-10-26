@@ -143,10 +143,10 @@ pipeline {
             }
         }
         stage("integration testing"){
-            steps{
-                when{
+            when{
                     branch 'feature*'
                 }
+            steps{
                 withAWS(credentials: 'aws2', region: 'ap-south-1') {
                     sh '''
                         bash integration-test-with-ec2.sh
