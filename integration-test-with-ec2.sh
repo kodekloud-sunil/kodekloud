@@ -24,6 +24,7 @@ if [[ "$URL" != '' ]]; then
         echo "One or more test(s) failed"
         exit 1
     fi
+    
 else
     echo "Could not fetch a token/URL; Check/Debug line 6"
     exit 1

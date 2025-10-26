@@ -11,11 +11,11 @@ pipeline {
         GIT_TOKEN = credentials('git-token')
     }
     stages {
-        stage('Installing Dependencies') {
-            steps {
-                sh 'npm install --no-audit'
-            }
-        }
+        // stage('Installing Dependencies') {
+        //     steps {
+        //         sh 'npm install --no-audit'
+        //     }
+        // }
         // stage('dependencies scanning'){
         //     parallel{
         //         stage('audit'){
@@ -117,6 +117,9 @@ pipeline {
         stage('aws'){
             
             steps{
+                when{
+                    branch 'feature*'
+                }
                 script{
                     sshagent(['ssh']) {
                         sh """
@@ -142,6 +145,9 @@ pipeline {
         }
         stage("integration testing"){
             steps{
+                when{
+                    branch 'feature*'
+                }
                 withAWS(credentials: 'aws2', region: 'ap-south-1') {
                     sh '''
                         bash integration-test-with-ec2.sh
@@ -149,6 +155,33 @@ pipeline {
                 }
 
             }  
+        }
+        stage("update image tag"){
+            when{
+                branch 'PR*'
+            }
+            steps{
+                sh 'git clone -b main https://github.com/kodekloud-sunil/kubernetes.git'
+                dir('kubernetes'){
+                    sh '''
+                        ##### Replace Docker Tag #####
+                        git checkout main
+                        git checkout -b feature-$BUILD_ID
+                        sed -i "s#sunilp.*#sunilpolaki/solar-app:$GIT_COMMIT#g" deployment.yml
+                        cat deployment.yml
+
+
+                        ##### Commit and Push to Feature Branch #####
+                        git config --global user.email "sunilpolaki4321@gmail.com"
+                        git config --global user.name "sunilpolaki"
+                        git remote set-url origin https://$GIT_TOKEN@github.com/Production-Pipeline/argo-cd.git
+                        git add .
+                        git commit -am "Updated docker image"
+                        git push -u origin feature-$BUILD_ID
+                    '''
+                }
+
+            }
         }
     }
 }
