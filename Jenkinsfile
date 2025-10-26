@@ -144,7 +144,7 @@ pipeline {
                 withAWS(credentials: 'aws-aws-iam-s3', region: 'ap-south-1') {
                     sh '''
                         chmod +x integration-test-with-ec2.sh \
-                        bash integration-test-with-ec2.sh
+                        bash ./integration-test-with-ec2.sh
                     '''
                 }
             }
