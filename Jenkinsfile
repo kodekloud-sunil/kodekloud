@@ -120,7 +120,7 @@ pipeline {
                 script{
                     sshagent(['ssh']) {
                         sh """
-                        ssh -o StrictHostKeyChecking=no ubuntu@13.201.225.128 '
+                        ssh -o StrictHostKeyChecking=no ubuntu@65.0.69.86 'dgf
                             if sudo docker ps -a | grep -q "solar-system"; then
                                 echo "Container found. Stopping..."
                                 sudo docker stop solar-system && sudo docker rm solar-system
