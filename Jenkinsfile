@@ -53,7 +53,7 @@ pipeline {
         stage('SAST'){
             steps{
                 timeout(time: 60, unit: 'SECONDS') {
-                    withSonarQubeEnv('sonar-server') {
+                    withSonarQubeEnv('sunil-sonar-server') {
                         sh '''
                             $SONAR_HOME/bin/sonar-scanner \
                                 -Dsonar.projectKey=kodekloud \
