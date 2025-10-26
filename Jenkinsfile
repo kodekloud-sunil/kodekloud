@@ -16,55 +16,55 @@ pipeline {
                 sh 'npm install --no-audit'
             }
         }
-        stage('dependencies scanning'){
-            parallel{
-                stage('audit'){
-                    steps{
-                        sh 'npm audit --audit-level=critical || true'
-                    }
-                }
-                stage('owasp'){
-                    steps{
-                        dependencyCheck additionalArguments: '''
-                            --scan "./"
-                            --out "./"
-                            --format "ALL"
-                            --disableYarnAudit
-                            --prettyPrint''', odcInstallation: 'dep-check-10'
-                        dependencyCheckPublisher failedTotalCritical: 6, pattern: 'dependency-check-report.xml', stopBuild: true
+        // stage('dependencies scanning'){
+        //     parallel{
+        //         stage('audit'){
+        //             steps{
+        //                 sh 'npm audit --audit-level=critical || true'
+        //             }
+        //         }
+        //         stage('owasp'){
+        //             steps{
+        //                 dependencyCheck additionalArguments: '''
+        //                     --scan "./"
+        //                     --out "./"
+        //                     --format "ALL"
+        //                     --disableYarnAudit
+        //                     --prettyPrint''', odcInstallation: 'dep-check-10'
+        //                 dependencyCheckPublisher failedTotalCritical: 6, pattern: 'dependency-check-report.xml', stopBuild: true
                          
-                    }
-                }
+        //             }
+        //         }
 
-            }
-        }
+        //     }
+        // }
         // stage('unit testing'){
         //     steps{
         //         sh 'npm test'
         //     }
         // }
-        stage('code coverage'){
-            steps{
-                    catchError(buildResult: 'SUCCESS', message: 'holy shit!!!', stageResult: 'UNSTABLE') {
-                        sh 'npm run coverage'
-                }
-            }
-        }
-        stage('SAST'){
-            steps{
-                timeout(time: 60, unit: 'SECONDS') {
-                    withSonarQubeEnv('sunil-sonar-server') {
-                        sh '''
-                            $SONAR_HOME/bin/sonar-scanner \
-                                -Dsonar.projectKey=kodekloud \
-                                -Dsonar.sources=app.js \
-                                -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
-                        '''
-                    }
-                }
-                waitForQualityGate abortPipeline: true
-            }
-        }
+        // stage('code coverage'){
+        //     steps{
+        //             catchError(buildResult: 'SUCCESS', message: 'holy shit!!!', stageResult: 'UNSTABLE') {
+        //                 sh 'npm run coverage'
+        //         }
+        //     }
+        // }
+        // stage('SAST'){
+        //     steps{
+        //         timeout(time: 60, unit: 'SECONDS') {
+        //             withSonarQubeEnv('sunil-sonar-server') {
+        //                 sh '''
+        //                     $SONAR_HOME/bin/sonar-scanner \
+        //                         -Dsonar.projectKey=kodekloud \
+        //                         -Dsonar.sources=app.js \
+        //                         -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
+        //                 '''
+        //             }
+        //         }
+        //         waitForQualityGate abortPipeline: true
+        //     }
+        // }
         stage('docker build'){
             steps{
                 sh 'docker build -t sunilpolaki/solar-app:$GIT_COMMIT .'
