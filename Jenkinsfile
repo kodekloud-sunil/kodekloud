@@ -182,4 +182,14 @@ pipeline {
             }
         }
     }
+    post {
+        always {
+            // Clean up the manifest repository to avoid clone conflicts in subsequent runs.
+            script {
+                if (fileExists('kubernetes')) {
+                    sh 'rm -rf kubernetes'
+                }
+            }
+        }
+    }
 }
