@@ -139,6 +139,13 @@ pipeline {
                 }
             }
         }
+        stage('integration test with ec2'){
+            steps{
+                sh '''
+                    bash integration-test-with-ec2.sh
+                '''
+            }
+        }
     }
     post {
         always {
