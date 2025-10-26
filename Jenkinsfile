@@ -11,7 +11,7 @@ pipeline {
         GIT_TOKEN = credentials('git-token')
     }
     stages {
-        // stage('Installing Dependencies') {
+        // stage('Installing Dependencies') { //
         //     steps {
         //         sh 'npm install --no-audit'
         //     }
