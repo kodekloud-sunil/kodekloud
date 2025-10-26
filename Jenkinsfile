@@ -121,14 +121,14 @@ pipeline {
                     sshagent(['ssh']) {
                         sh """
                         ssh -o StrictHostKeyChecking=no ubuntu@65.0.69.86 'dgf
-                            if sudo docker ps -a | grep -q "solar-system"; then
+                            if sudo docker ps -a | grep -q "solar-app"; then
                                 echo "Container found. Stopping..."
-                                sudo docker stop solar-system && sudo docker rm solar-system
+                                sudo docker stop solar-app && sudo docker rm solar-app
                                 echo "Container stopped and removed."
                             fi
 
                             echo "Running new container..."
-                            sudo docker run --name solar-system \\
+                            sudo docker run --name solar-app \\
                                 -e MONGO_URI=${env.MONGO_URI} \\
                                 -e MONGO_USERNAME=${env.MONGO_USERNAME} \\
                                 -e MONGO_PASSWORD=${env.MONGO_PASSWORD} \\
