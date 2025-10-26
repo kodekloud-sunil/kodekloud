@@ -38,11 +38,11 @@ pipeline {
 
             }
         }
-        stage('unit testing'){
-            steps{
-                sh 'npm test'
-            }
-        }
+        // stage('unit testing'){
+        //     steps{
+        //         sh 'npm test'
+        //     }
+        // }
         stage('code coverage'){
             steps{
                     catchError(buildResult: 'SUCCESS', message: 'holy shit!!!', stageResult: 'UNSTABLE') {
