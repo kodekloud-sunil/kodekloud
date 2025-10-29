@@ -188,7 +188,7 @@ pipeline {
             steps{
                 sh """
                     curl -s -o response.json -w "%{http_code}" -X POST \\
-                    https://api.github.com/repos/Production-Pipeline/argo-cd/pulls \\
+                    https://github.com/kodekloud-sunil/kubernetes/pulls \\
                     -H "Accept: application/vnd.github+json" \\
                     -H "Authorization: token ${GIT_TOKEN}" \\
                     -H "Content-Type: application/json" \\
