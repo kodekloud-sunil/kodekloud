@@ -188,7 +188,7 @@ pipeline {
             steps{
                 sh """
                     curl -s -o response.json -w "%{http_code}" -X POST \\
-                    https://github.com/kodekloud-sunil/kubernetes/pulls \\
+                    https://api.github.com/repos/kodekloud-sunil/kubernetes/pulls \\
                     -H "Accept: application/vnd.github+json" \\
                     -H "Authorization: token ${GIT_TOKEN}" \\
                     -H "Content-Type: application/json" \\
